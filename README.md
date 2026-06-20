@@ -25,7 +25,7 @@ patterns that standard trackers miss, and offers conversational, contextual supp
 | **Companion** (centerpiece) | An empathetic, always-available chat. Validates feelings, then offers one small, exam-aware next step. |
 | **Daily reflection** | Mood check-in (1–5) + open-ended journaling → an AI reflection naming emotions, stress triggers, and a soft coping suggestion. |
 | **Mood patterns** | A mood trend over time + the recurring stress triggers ranked by frequency — the patterns a single entry can't show. |
-| **Calm zone** | Guided 4-4-4 box breathing + 2-minute resets (grounding, shoulder release, thought reframing). |
+| **Calm zone** | Guided 4-4-4 box breathing + 2-minute resets (grounding, shoulder release, reframing) — and the exercise that fits your detected state is **recommended automatically** from your journal. |
 | **Safety net** (always on) | Deterministic crisis detection that surfaces India helplines the moment distress is detected. |
 
 ## Approach & logic
@@ -40,6 +40,7 @@ unit-tested code does the logic — and, crucially, the safety net.**
   - `crisis.ts` — risk triage (`none` / `elevated` / `crisis`). This is the **guaranteed safety net**: it never depends on the model's judgement, normalises phone-keyboard curly apostrophes, and surfaces helplines.
   - `triggers.ts` — an exam-stress trigger taxonomy + frequency aggregation (the "patterns standard trackers miss").
   - `mood.ts` — mood trend, direction, and logging streak (IST-aware day bucketing).
+  - `recommend.ts` — **adaptive mindfulness**: maps the detected emotional state to the calm exercise that fits (breathing / grounding / reframe / shoulder release).
 
 This split is what makes the safety-critical behaviour reliable: a crisis is caught by
 plain, testable code, not left to a probabilistic model.
@@ -94,7 +95,7 @@ bun run dev                                        # http://localhost:3000
 ## Tests
 
 ```bash
-bun test          # 16 unit tests — crisis triage, trigger detection, mood trends
+bun test          # 21 unit tests — crisis triage, triggers, mood trends, exercise recommendation
 bun run test:api  # Hurl — verifies the deployed crisis triage over HTTP (no AI tokens spent)
 ```
 
@@ -102,9 +103,9 @@ bun run test:api  # Hurl — verifies the deployed crisis triage over HTTP (no A
 
 - **Audience is India-based students**, so: day/streak bucketing uses **IST**, and the
   crisis resources are Indian national helplines.
-- **Anonymous, per-session** (one session id per browser tab) — no accounts, no
-  cross-device sync. This is intentional for an MVP and keeps sensitive journaling
-  private.
+- **Anonymous, no accounts** — a session id is stored in the browser
+  (`localStorage`), so journaling history and patterns persist across visits on that
+  device without sign-up. No cross-device sync. Keeps sensitive journaling private.
 - **`gpt-4o-mini`** was chosen for cost and latency; the LLM is isolated in a single
   helper (`convex/lib/openai.ts`), so swapping providers is a one-file change.
 - Crisis detection is a **keyword/phrase safety net**, not a clinical assessment — it

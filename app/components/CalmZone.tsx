@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ExerciseKey } from "../../convex/lib/recommend";
 
 const PHASE = 4; // seconds per phase
 const CYCLE = PHASE * 3; // in → hold → out
 const PHASE_LABELS = ["Breathe in", "Hold", "Breathe out"] as const;
 
-export function CalmZone() {
+export function CalmZone({ focus }: { focus?: ExerciseKey | null }) {
   const [running, setRunning] = useState(false);
   const [tick, setTick] = useState(0);
+  const [openId, setOpenId] = useState<ExerciseKey | null>(null);
 
   useEffect(() => {
     if (!running) return;
@@ -16,16 +18,21 @@ export function CalmZone() {
     return () => clearInterval(id);
   }, [running]);
 
+  // Arriving from a journal recommendation: open the suggested micro-exercise.
+  useEffect(() => {
+    if (focus && focus !== "breathing") setOpenId(focus);
+  }, [focus]);
+
   const phaseIndex = Math.floor((tick % CYCLE) / PHASE);
   const phaseLabel = PHASE_LABELS[phaseIndex];
   const countdown = PHASE - (tick % PHASE);
   const cycles = Math.floor(tick / CYCLE);
-  const expanded = running && phaseIndex !== 2; // big during in + hold
+  const expanded = running && phaseIndex !== 2;
+  const breathingSuggested = focus === "breathing";
 
   function toggle() {
-    if (running) {
-      setRunning(false);
-    } else {
+    if (running) setRunning(false);
+    else {
       setTick(0);
       setRunning(true);
     }
@@ -35,10 +42,17 @@ export function CalmZone() {
     <div className="flex flex-1 flex-col">
       <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
         {/* Breathing */}
-        <div className="flex flex-col items-center rounded-2xl border border-line bg-base p-6">
-          <span className="mb-4 text-xs font-bold uppercase tracking-wider text-muted">
-            Box breathing · 4-4-4
-          </span>
+        <div
+          className={`flex flex-col items-center rounded-2xl border bg-base p-6 transition-colors ${
+            breathingSuggested ? "border-sage-deep ring-2 ring-sage/30" : "border-line"
+          }`}
+        >
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted">
+              Box breathing · 4-4-4
+            </span>
+            {breathingSuggested && <SuggestedBadge />}
+          </div>
 
           <div className="relative mb-6 flex h-44 w-44 items-center justify-center">
             <div
@@ -88,7 +102,13 @@ export function CalmZone() {
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
             Quick 2-minute resets
           </h3>
-          <Accordion title="5-4-3-2-1 sensory grounding">
+          <Accordion
+            id="grounding"
+            title="5-4-3-2-1 sensory grounding"
+            openId={openId}
+            setOpenId={setOpenId}
+            suggested={focus === "grounding"}
+          >
             <p>When thoughts spin out before a test, anchor to your desk and name:</p>
             <p className="text-slate">
               <strong>5</strong> things you see · <strong>4</strong> you can touch ·{" "}
@@ -96,14 +116,26 @@ export function CalmZone() {
               <strong>1</strong> you can taste.
             </p>
           </Accordion>
-          <Accordion title="Shoulder release (30s)">
+          <Accordion
+            id="shoulder"
+            title="Shoulder release (30s)"
+            openId={openId}
+            setOpenId={setOpenId}
+            suggested={focus === "shoulder"}
+          >
             <p>Long study hours pool tension in your neck and shoulders.</p>
             <p>
               Inhale and lift both shoulders toward your ears. Hold for three counts, then
               drop them with a heavy sigh out. Repeat twice.
             </p>
           </Accordion>
-          <Accordion title="Fact vs. exam narrative">
+          <Accordion
+            id="reframe"
+            title="Fact vs. exam narrative"
+            openId={openId}
+            setOpenId={setOpenId}
+            suggested={focus === "reframe"}
+          >
             <p>Catch the catastrophic story and rewrite it:</p>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
               <div className="rounded-lg border border-water bg-water/30 p-2.5">
@@ -125,16 +157,45 @@ export function CalmZone() {
   );
 }
 
-function Accordion({ title, children }: { title: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
+function SuggestedBadge() {
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-surface">
+    <span className="rounded-full bg-sage/15 px-2 py-0.5 text-[10px] font-semibold text-sage-ink">
+      Suggested for you
+    </span>
+  );
+}
+
+function Accordion({
+  id,
+  title,
+  openId,
+  setOpenId,
+  suggested,
+  children,
+}: {
+  id: ExerciseKey;
+  title: string;
+  openId: ExerciseKey | null;
+  setOpenId: (id: ExerciseKey | null) => void;
+  suggested?: boolean;
+  children: React.ReactNode;
+}) {
+  const open = openId === id;
+  return (
+    <div
+      className={`overflow-hidden rounded-xl border bg-surface transition-colors ${
+        suggested ? "border-sage-deep ring-1 ring-sage/30" : "border-line"
+      }`}
+    >
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpenId(open ? null : id)}
         aria-expanded={open}
         className="flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left text-xs font-semibold text-slate hover:bg-base"
       >
-        <span>{title}</span>
+        <span className="flex items-center gap-2">
+          {title}
+          {suggested && <SuggestedBadge />}
+        </span>
         <span className="text-muted">{open ? "−" : "+"}</span>
       </button>
       {open && (

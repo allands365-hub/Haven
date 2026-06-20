@@ -15,6 +15,7 @@ import type * as entries from "../entries.js";
 import type * as lib_crisis from "../lib/crisis.js";
 import type * as lib_mood from "../lib/mood.js";
 import type * as lib_openai from "../lib/openai.js";
+import type * as lib_recommend from "../lib/recommend.js";
 import type * as lib_triggers from "../lib/triggers.js";
 
 import type {
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   "lib/crisis": typeof lib_crisis;
   "lib/mood": typeof lib_mood;
   "lib/openai": typeof lib_openai;
+  "lib/recommend": typeof lib_recommend;
   "lib/triggers": typeof lib_triggers;
 }>;
 

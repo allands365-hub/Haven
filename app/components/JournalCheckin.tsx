@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { TRIGGERS } from "../../convex/lib/triggers";
+import { recommendExercise, type ExerciseKey } from "../../convex/lib/recommend";
+import type { TriggerKey } from "../../lib/types";
 import type { Id } from "../../convex/_generated/dataModel";
 
 const MOODS = [
@@ -21,7 +23,7 @@ export function JournalCheckin({
 }: {
   sessionId: string;
   onCrisis: () => void;
-  onGoToCalm: () => void;
+  onGoToCalm: (exercise?: ExerciseKey) => void;
 }) {
   const create = useMutation(api.entries.create);
   const analyze = useAction(api.analyze.analyzeEntry);
@@ -32,6 +34,13 @@ export function JournalCheckin({
   const [currentId, setCurrentId] = useState<Id<"entries"> | null>(null);
 
   const current = entries?.find((e) => e._id === currentId) ?? null;
+  const recommended = current?.analysis
+    ? recommendExercise(
+        current.analysis.emotions,
+        current.analysis.triggers as TriggerKey[],
+        current.mood,
+      )
+    : null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -141,15 +150,32 @@ export function JournalCheckin({
           )}
         </div>
 
-        <div className="flex items-center justify-between rounded-2xl border border-sage/10 bg-sage/5 p-4">
-          <p className="text-xs text-muted">Need some breathing support next?</p>
-          <button
-            onClick={onGoToCalm}
-            className="cursor-pointer rounded-xl bg-sage-deep px-4 py-2 text-xs font-semibold text-white hover:opacity-90"
-          >
-            Go to Calm
-          </button>
-        </div>
+        {recommended ? (
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-sage/10 bg-sage/5 p-4">
+            <div>
+              <p className="text-xs font-semibold text-slate">
+                Haven suggests: {recommended.title}
+              </p>
+              <p className="mt-0.5 text-xs text-muted">A 2-minute reset {recommended.reason}.</p>
+            </div>
+            <button
+              onClick={() => onGoToCalm(recommended.key)}
+              className="shrink-0 cursor-pointer rounded-xl bg-sage-deep px-4 py-2 text-xs font-semibold text-white hover:opacity-90"
+            >
+              Try it
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between rounded-2xl border border-sage/10 bg-sage/5 p-4">
+            <p className="text-xs text-muted">Need a moment to breathe?</p>
+            <button
+              onClick={() => onGoToCalm()}
+              className="cursor-pointer rounded-xl bg-sage-deep px-4 py-2 text-xs font-semibold text-white hover:opacity-90"
+            >
+              Go to Calm
+            </button>
+          </div>
+        )}
       </div>
     );
   }

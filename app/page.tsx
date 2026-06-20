@@ -6,6 +6,7 @@ import { JournalCheckin } from "./components/JournalCheckin";
 import { Insights } from "./components/Insights";
 import { CalmZone } from "./components/CalmZone";
 import { CrisisModal } from "./components/CrisisModal";
+import type { ExerciseKey } from "../convex/lib/recommend";
 
 type Tab = "companion" | "journal" | "insights" | "calm";
 
@@ -34,6 +35,12 @@ export default function Home() {
   });
   const [tab, setTab] = useState<Tab>("companion");
   const [crisis, setCrisis] = useState(false);
+  const [calmFocus, setCalmFocus] = useState<ExerciseKey | null>(null);
+
+  function goToCalm(exercise?: ExerciseKey) {
+    setCalmFocus(exercise ?? null);
+    setTab("calm");
+  }
 
   const [name, setName] = useState("friend");
   const [exam, setExam] = useState("JEE");
@@ -175,11 +182,11 @@ export default function Home() {
               <JournalCheckin
                 sessionId={sessionId}
                 onCrisis={() => setCrisis(true)}
-                onGoToCalm={() => setTab("calm")}
+                onGoToCalm={goToCalm}
               />
             )}
             {tab === "insights" && <Insights sessionId={sessionId} />}
-            {tab === "calm" && <CalmZone />}
+            {tab === "calm" && <CalmZone focus={calmFocus} />}
           </main>
         </div>
       </div>

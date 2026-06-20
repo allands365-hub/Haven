@@ -3,6 +3,7 @@ import type { JournalEntry } from "../lib/types";
 import { assessRisk } from "../convex/lib/crisis";
 import { extractTriggers, aggregateTriggers } from "../convex/lib/triggers";
 import { computeMoodTrend } from "../convex/lib/mood";
+import { recommendExercise } from "../convex/lib/recommend";
 
 describe("assessRisk", () => {
   it("flags explicit self-harm language as crisis", () => {
@@ -107,5 +108,31 @@ describe("computeMoodTrend", () => {
   it("handles an empty history", () => {
     const trend = computeMoodTrend([], now);
     expect(trend).toEqual({ series: [], average: 0, latest: null, direction: "steady", streakDays: 0 });
+  });
+});
+
+describe("recommendExercise", () => {
+  it("recommends breathing for anxiety/panic", () => {
+    expect(recommendExercise(["anxious", "fear"], [], 2).key).toBe("breathing");
+  });
+
+  it("recommends reframe for self-doubt / comparison", () => {
+    expect(recommendExercise([], ["self-doubt"], 2).key).toBe("reframe");
+    expect(recommendExercise(["hopeless"], [], 1).key).toBe("reframe");
+    expect(recommendExercise([], ["peer-comparison"], 3).key).toBe("reframe");
+  });
+
+  it("recommends grounding for overwhelm / backlog / time pressure", () => {
+    expect(recommendExercise(["overwhelm"], [], 2).key).toBe("grounding");
+    expect(recommendExercise([], ["syllabus-backlog"], 2).key).toBe("grounding");
+  });
+
+  it("recommends shoulder release for fatigue / poor sleep", () => {
+    expect(recommendExercise(["fatigue"], [], 3).key).toBe("shoulder");
+    expect(recommendExercise([], ["sleep"], 3).key).toBe("shoulder");
+  });
+
+  it("defaults to breathing when nothing specific is detected", () => {
+    expect(recommendExercise([], [], 3).key).toBe("breathing");
   });
 });
