@@ -101,7 +101,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function DirectionBadge({ direction }: { direction: "improving" | "declining" | "steady" }) {
   const map = {
-    improving: { label: "Improving", cls: "bg-sage/15 text-sage", arrow: "↗" },
+    improving: { label: "Improving", cls: "bg-sage/15 text-sage-ink", arrow: "↗" },
     steady: { label: "Steady", cls: "bg-line text-muted", arrow: "→" },
     declining: { label: "Needs care", cls: "bg-water text-slate", arrow: "↘" },
   } as const;

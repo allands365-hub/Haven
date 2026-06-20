@@ -36,10 +36,14 @@ export function JournalCheckin({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!text.trim()) return;
-    const { entryId, risk } = await create({ sessionId, mood, text });
-    setCurrentId(entryId);
-    if (risk === "crisis" || risk === "elevated") onCrisis();
-    await analyze({ entryId, text });
+    try {
+      const { entryId, risk } = await create({ sessionId, mood, text });
+      setCurrentId(entryId);
+      if (risk === "crisis" || risk === "elevated") onCrisis();
+      await analyze({ entryId, text });
+    } catch {
+      /* entry is saved; the reflection card surfaces the error state */
+    }
   }
 
   function reset() {
@@ -57,7 +61,7 @@ export function JournalCheckin({
           </span>
           <button
             onClick={reset}
-            className="cursor-pointer text-xs font-semibold text-sage hover:underline"
+            className="cursor-pointer text-xs font-semibold text-sage-ink hover:underline"
           >
             Write another entry
           </button>
@@ -69,7 +73,9 @@ export function JournalCheckin({
               <span className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
                 Mood logged
               </span>
-              <span className="text-xl">{MOODS[current.mood - 1].emoji}</span>
+              <span className="text-xl">
+                {MOODS[Math.min(5, Math.max(1, current.mood)) - 1].emoji}
+              </span>
             </div>
             {current.status === "analyzing" && (
               <span className="flex items-center gap-2 text-xs text-muted">
@@ -96,7 +102,7 @@ export function JournalCheckin({
                     {current.analysis.emotions.map((em) => (
                       <span
                         key={em}
-                        className="rounded-full bg-sage/15 px-3 py-1 text-xs font-medium text-sage"
+                        className="rounded-full bg-sage/15 px-3 py-1 text-xs font-medium text-sage-ink"
                       >
                         {em}
                       </span>
@@ -124,7 +130,7 @@ export function JournalCheckin({
               )}
 
               <div className="border-t border-line pt-4">
-                <span className="mb-1 block text-xs font-semibold text-sage">
+                <span className="mb-1 block text-xs font-semibold text-sage-ink">
                   A soft perspective
                 </span>
                 <p className="text-sm font-light italic leading-relaxed text-slate">
@@ -172,7 +178,7 @@ export function JournalCheckin({
                 aria-pressed={mood === m.val}
                 className={`flex min-h-[44px] cursor-pointer flex-col items-center rounded-xl border p-3 transition-all ${
                   mood === m.val
-                    ? "border-sage bg-sage/10 font-semibold text-sage"
+                    ? "border-sage bg-sage/10 font-semibold text-sage-ink"
                     : "border-line hover:bg-base"
                 }`}
               >

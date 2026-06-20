@@ -26,8 +26,11 @@ const CRISIS_PHRASES = [
   "self harm",
   "self-harm",
   "harm myself",
+  "harming myself",
   "hurt myself",
+  "hurting myself",
   "cut myself",
+  "cutting myself",
   "no reason to live",
   "no point in living",
   "better off dead",
@@ -61,7 +64,9 @@ function containsPhrase(haystack: string, phrase: string): boolean {
 }
 
 export function assessRisk(text: string): RiskResult {
-  const normalized = ` ${text.toLowerCase()} `;
+  // Normalize curly/smart apostrophes (auto-inserted by phone keyboards) to a
+  // plain ASCII one, so "don't" / "can't" phrases still match the phrase list.
+  const normalized = ` ${text.toLowerCase().replace(/[‘’ʼ´`]/g, "'")} `;
 
   const crisisMatches = CRISIS_PHRASES.filter((p) => containsPhrase(normalized, p));
   if (crisisMatches.length > 0) {

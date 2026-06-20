@@ -111,7 +111,7 @@ export function CalmZone() {
                 <span>“If I don&apos;t clear this attempt, my life is over.”</span>
               </div>
               <div className="rounded-lg border border-sage/20 bg-sage/10 p-2.5">
-                <span className="mb-1 block text-[10px] font-bold text-sage">Balanced reality</span>
+                <span className="mb-1 block text-[10px] font-bold text-sage-ink">Balanced reality</span>
                 <span>
                   “This exam is selective. Clearing it is great, but my effort builds a future
                   either way.”

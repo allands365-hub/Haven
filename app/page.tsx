@@ -9,11 +9,13 @@ import { CrisisModal } from "./components/CrisisModal";
 
 type Tab = "companion" | "journal" | "insights" | "calm";
 
-const TABS: { key: Tab; icon: string; label: string }[] = [
-  { key: "companion", icon: "💬", label: "Companion" },
-  { key: "journal", icon: "✍️", label: "Daily reflection" },
-  { key: "insights", icon: "📊", label: "Mood patterns" },
-  { key: "calm", icon: "🧘", label: "Calm zone" },
+type IconCmp = (props: { className?: string }) => React.ReactElement;
+
+const TABS: { key: Tab; Icon: IconCmp; label: string }[] = [
+  { key: "companion", Icon: ChatIcon, label: "Companion" },
+  { key: "journal", Icon: PenIcon, label: "Daily reflection" },
+  { key: "insights", Icon: ChartIcon, label: "Mood patterns" },
+  { key: "calm", Icon: LotusIcon, label: "Calm zone" },
 ];
 
 const EXAMS = ["JEE", "NEET", "UPSC", "CAT", "GATE", "CUET"];
@@ -94,7 +96,7 @@ export default function Home() {
                         setExam(x);
                         setShowProfile(false);
                       }}
-                      className={`cursor-pointer rounded-lg border py-1.5 text-[10px] font-medium transition-all ${
+                      className={`min-h-[36px] cursor-pointer rounded-lg border py-2 text-[10px] font-medium transition-all ${
                         exam === x
                           ? "border-sage bg-sage text-white"
                           : "border-line text-muted hover:bg-base"
@@ -112,23 +114,24 @@ export default function Home() {
         {/* Workspace */}
         <div className="grid flex-1 grid-cols-1 items-start gap-8 lg:grid-cols-12">
           <nav className="z-20 flex gap-2 rounded-2xl border border-line bg-surface/60 p-2.5 shadow-sm lg:col-span-3 lg:flex-col">
-            {TABS.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setTab(t.key)}
-                aria-current={tab === t.key}
-                className={`flex flex-1 cursor-pointer items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all lg:flex-initial lg:justify-start ${
-                  tab === t.key
-                    ? "bg-surface font-semibold text-sage shadow-sm"
-                    : "text-muted hover:bg-surface/50 hover:text-slate"
-                }`}
-              >
-                <span className="text-base" aria-hidden>
-                  {t.icon}
-                </span>
-                <span className="hidden sm:inline">{t.label}</span>
-              </button>
-            ))}
+            {TABS.map((t) => {
+              const Icon = t.Icon;
+              return (
+                <button
+                  key={t.key}
+                  onClick={() => setTab(t.key)}
+                  aria-current={tab === t.key}
+                  className={`flex flex-1 cursor-pointer items-center justify-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all lg:flex-initial lg:justify-start ${
+                    tab === t.key
+                      ? "bg-surface font-semibold text-sage-ink shadow-sm"
+                      : "text-muted hover:bg-surface/50 hover:text-slate"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="hidden sm:inline">{t.label}</span>
+                </button>
+              );
+            })}
           </nav>
 
           <main className="flex min-h-[550px] flex-col rounded-3xl border border-line bg-surface p-6 shadow-sm md:p-8 lg:col-span-9">
@@ -161,7 +164,7 @@ export default function Home() {
           </span>
           <button
             onClick={() => setCrisis(true)}
-            className="cursor-pointer font-semibold text-sage hover:underline"
+            className="cursor-pointer font-semibold text-sage-ink hover:underline"
           >
             Need immediate help?
           </button>
@@ -170,5 +173,56 @@ export default function Home() {
 
       <CrisisModal open={crisis} onClose={() => setCrisis(false)} />
     </div>
+  );
+}
+
+function svgProps(className?: string) {
+  return {
+    className,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.75,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+}
+
+function ChatIcon({ className }: { className?: string }) {
+  return (
+    <svg {...svgProps(className)}>
+      <path d="M8 10.5h8M8 14h5" />
+      <path d="M21 11.5a8 8 0 0 1-11.5 7.2L4 20.5l1.4-4.3A8 8 0 1 1 21 11.5Z" />
+    </svg>
+  );
+}
+
+function PenIcon({ className }: { className?: string }) {
+  return (
+    <svg {...svgProps(className)}>
+      <path d="M16.5 4.5 19.5 7.5 8.5 18.5 4 20l1.5-4.5z" />
+      <path d="M14.5 6.5 17.5 9.5" />
+    </svg>
+  );
+}
+
+function ChartIcon({ className }: { className?: string }) {
+  return (
+    <svg {...svgProps(className)}>
+      <path d="M4 20h16" />
+      <path d="M7 20v-5M12 20V8M17 20v-9" />
+    </svg>
+  );
+}
+
+function LotusIcon({ className }: { className?: string }) {
+  return (
+    <svg {...svgProps(className)}>
+      <path d="M12 4c1.8 2.2 1.8 5 0 7.5-1.8-2.5-1.8-5.3 0-7.5Z" />
+      <path d="M12 11.5c2.7-1 4.8.3 5.7 3-2.7 1-4.8-.3-5.7-3Z" />
+      <path d="M12 11.5c-2.7-1-4.8.3-5.7 3 2.7 1 4.8-.3 5.7-3Z" />
+      <path d="M5 16.5c3 2.3 11 2.3 14 0" />
+    </svg>
   );
 }

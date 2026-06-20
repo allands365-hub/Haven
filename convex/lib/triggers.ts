@@ -16,12 +16,21 @@ export const TRIGGERS: Record<TriggerKey, { label: string; keywords: string[] }>
 
 export const TRIGGER_KEYS = Object.keys(TRIGGERS) as TriggerKey[];
 
+function escapeRe(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Match a keyword at a word boundary (allows suffixes like "disappoint" →
+ *  "disappointed", but not mid-word matches like "time" in "sometimes"). */
+function keywordHit(text: string, kw: string): boolean {
+  return new RegExp(`\\b${escapeRe(kw)}`, "i").test(text);
+}
+
 /** Deterministic keyword-based trigger extraction (fallback to / backstop for the AI). */
 export function extractTriggers(text: string): TriggerKey[] {
-  const lower = text.toLowerCase();
   const found: TriggerKey[] = [];
   for (const key of TRIGGER_KEYS) {
-    if (TRIGGERS[key].keywords.some((kw) => lower.includes(kw))) {
+    if (TRIGGERS[key].keywords.some((kw) => keywordHit(text, kw))) {
       found.push(key);
     }
   }

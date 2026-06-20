@@ -25,6 +25,15 @@ describe("assessRisk", () => {
     // "suicide" must not match via substrings; ordinary text stays "none"
     expect(assessRisk("I studied biocide chemistry today").level).toBe("none");
   });
+
+  it("normalizes curly apostrophes so phone-typed phrases still match", () => {
+    // U+2019 is what iOS/Android keyboards auto-insert
+    expect(assessRisk("I don’t want to be here anymore").level).toBe("crisis");
+  });
+
+  it("catches present-tense self-harm phrasing", () => {
+    expect(assessRisk("I keep cutting myself").level).toBe("crisis");
+  });
 });
 
 describe("extractTriggers", () => {
@@ -36,6 +45,11 @@ describe("extractTriggers", () => {
 
   it("returns nothing when no triggers present", () => {
     expect(extractTriggers("had a calm productive morning")).toEqual([]);
+  });
+
+  it("does not match a keyword inside an unrelated word", () => {
+    // "time" must not match inside "sometimes"
+    expect(extractTriggers("I feel okay sometimes")).not.toContain("time-management");
   });
 });
 

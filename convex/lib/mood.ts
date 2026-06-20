@@ -1,10 +1,11 @@
 import type { JournalEntry, MoodLevel, MoodTrend } from "../../lib/types";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+const IST_OFFSET_MS = 5.5 * 60 * 60 * 1000; // Haven's audience is in India (UTC+5:30)
 
-/** Local YYYY-MM-DD for grouping entries by day. */
+/** YYYY-MM-DD in IST for grouping entries by local day. */
 function dayKey(ts: number): string {
-  return new Date(ts).toISOString().slice(0, 10);
+  return new Date(ts + IST_OFFSET_MS).toISOString().slice(0, 10);
 }
 
 /**

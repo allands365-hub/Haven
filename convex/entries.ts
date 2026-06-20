@@ -7,10 +7,11 @@ import { assessRisk } from "./lib/crisis";
 export const create = mutation({
   args: { sessionId: v.string(), mood: v.number(), text: v.string() },
   handler: async (ctx, { sessionId, mood, text }) => {
+    const safeMood = Math.min(5, Math.max(1, Math.round(mood))); // guard the 1..5 range
     const risk = assessRisk(text).level;
     const entryId = await ctx.db.insert("entries", {
       sessionId,
-      mood,
+      mood: safeMood,
       text,
       createdAt: Date.now(),
       risk,

@@ -82,7 +82,7 @@ export function CompanionChat({
               key={reply}
               onClick={() => submit(reply)}
               disabled={sending}
-              className="cursor-pointer rounded-full border border-line bg-surface px-3.5 py-1.5 text-left text-xs text-muted transition-all hover:border-sage/40 hover:text-sage disabled:opacity-50"
+              className="inline-flex min-h-[40px] cursor-pointer items-center rounded-full border border-line bg-surface px-3.5 py-1.5 text-left text-xs text-muted transition-all hover:border-sage/40 hover:text-sage-ink disabled:opacity-50"
             >
               {reply}
             </button>
