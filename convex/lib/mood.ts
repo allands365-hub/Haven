@@ -35,13 +35,16 @@ export function computeMoodTrend(entries: JournalEntry[], now: number): MoodTren
 
   const average = round1(avg(entries.map((e) => e.mood)));
 
-  const latest = [...entries].sort((a, b) => b.createdAt - a.createdAt)[0].mood as MoodLevel;
+  const chronological = [...entries].sort((a, b) => a.createdAt - b.createdAt);
+  const latest = chronological[chronological.length - 1].mood as MoodLevel;
 
   return {
     series,
     average,
     latest,
-    direction: computeDirection(series.map((s) => s.mood)),
+    // Direction reflects the trajectory of recent entries (not day-bucketed),
+    // so it responds within a session as well as across days.
+    direction: computeDirection(chronological.map((e) => e.mood)),
     streakDays: computeStreak(byDay, now),
   };
 }

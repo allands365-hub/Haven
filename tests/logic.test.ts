@@ -105,6 +105,11 @@ describe("computeMoodTrend", () => {
     expect(trend.streakDays).toBe(1);
   });
 
+  it("reflects an improving trajectory across entries within one day", () => {
+    const trend = computeMoodTrend([entry(1, 0), entry(2, 0), entry(4, 0), entry(5, 0)], now);
+    expect(trend.direction).toBe("improving");
+  });
+
   it("handles an empty history", () => {
     const trend = computeMoodTrend([], now);
     expect(trend).toEqual({ series: [], average: 0, latest: null, direction: "steady", streakDays: 0 });
