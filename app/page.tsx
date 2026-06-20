@@ -132,8 +132,8 @@ export default function Home() {
         </header>
 
         {/* Workspace */}
-        <div className="grid flex-1 grid-cols-1 items-start gap-8 lg:grid-cols-12">
-          <nav className="z-20 flex gap-2 rounded-2xl border border-line bg-surface/60 p-2.5 shadow-sm lg:col-span-3 lg:flex-col">
+        <div className="grid flex-1 grid-cols-1 gap-8 lg:grid-cols-12">
+          <nav className="z-20 flex gap-2 self-start rounded-2xl border border-line bg-surface/60 p-2.5 shadow-sm lg:col-span-3 lg:flex-col">
             {TABS.map((t) => {
               const Icon = t.Icon;
               return (

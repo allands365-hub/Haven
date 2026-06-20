@@ -59,11 +59,12 @@ export function CompanionChat({
         <span className="text-xs font-light text-muted">Targeting {targetExam}</span>
       </div>
 
-      <div className="mb-6 max-h-[380px] flex-1 space-y-4 overflow-y-auto pr-2">
+      <div className="mb-6 min-h-0 flex-1 space-y-4 overflow-y-auto pr-2">
         {isEmpty && (
           <Bubble role="companion">
-            Namaste {studentName}. The pressure of {targetExam} prep can feel heavy — but
-            right now, you&apos;re safe here. How is your mind feeling in this moment?
+            Namaste {studentName}. The pressure of preparing for {targetExam}
+            {" "}can feel heavy — but right now, you&apos;re safe here. How is your mind
+            feeling in this moment?
           </Bubble>
         )}
         {messages?.map((m) => (
@@ -82,7 +83,7 @@ export function CompanionChat({
               key={reply}
               onClick={() => submit(reply)}
               disabled={sending}
-              className="inline-flex min-h-[40px] cursor-pointer items-center rounded-full border border-line bg-surface px-3.5 py-1.5 text-left text-xs text-muted transition-all hover:border-sage/40 hover:text-sage-ink disabled:opacity-50"
+              className="inline-flex min-h-[40px] cursor-pointer items-center rounded-full border border-line bg-surface px-3.5 py-1.5 text-left text-xs font-medium text-slate transition-all hover:border-sage/40 hover:text-sage-ink disabled:opacity-50"
             >
               {reply}
             </button>
