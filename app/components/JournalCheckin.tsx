@@ -133,7 +133,7 @@ export function JournalCheckin({
                 <span className="mb-1 block text-xs font-semibold text-sage-ink">
                   A soft perspective
                 </span>
-                <p className="text-sm font-light italic leading-relaxed text-slate">
+                <p className="text-[15px] italic leading-relaxed text-slate">
                   “{current.analysis.reflection}”
                 </p>
               </div>
