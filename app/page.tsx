@@ -177,8 +177,8 @@ export default function Home() {
       </div>
 
       {/* Footer / persistent safety line */}
-      <footer className="relative z-10 mt-8 border-t border-line bg-surface/40 py-4">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 text-[11px] text-muted sm:flex-row">
+      <footer className="relative z-10 mt-8 border-t border-line bg-surface/40 py-6">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 text-sm text-muted sm:flex-row">
           <span>
             Haven is a supportive companion, not a substitute for professional or medical help.
           </span>
