@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { VoiceButton } from "./VoiceButton";
+import { SpeakAloud } from "./SpeakAloud";
 
 const QUICK_REPLIES = [
   "I'm feeling very overwhelmed by backlogs",
@@ -68,7 +70,11 @@ export function CompanionChat({
           </Bubble>
         )}
         {messages?.map((m) => (
-          <Bubble key={m._id} role={m.role}>
+          <Bubble
+            key={m._id}
+            role={m.role}
+            speakText={m.role === "companion" ? m.text : undefined}
+          >
             {m.text}
           </Bubble>
         ))}
@@ -95,21 +101,24 @@ export function CompanionChat({
             e.preventDefault();
             submit(input);
           }}
-          className="flex gap-3"
+          className="flex items-center gap-2"
         >
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={sending}
-            placeholder="Share a thought, a backlog stressor, a mock-test frustration…"
+            placeholder="Share a thought… or tap Speak"
             aria-label="Message Haven"
             className="flex-1 rounded-xl border border-line bg-base px-4 py-3 text-sm text-slate placeholder:text-muted/70 focus:border-sage focus:outline-none"
+          />
+          <VoiceButton
+            onTranscript={(t) => setInput((p) => (p.trim() ? `${p.trim()} ${t}` : t))}
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="flex cursor-pointer items-center justify-center rounded-xl bg-sage-deep px-5 text-sm font-semibold text-white transition-opacity hover:opacity-95 disabled:opacity-50"
+            className="flex cursor-pointer items-center justify-center rounded-xl bg-sage-deep px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-95 disabled:opacity-50"
           >
             Send
           </button>
@@ -122,9 +131,11 @@ export function CompanionChat({
 function Bubble({
   role,
   children,
+  speakText,
 }: {
   role: "user" | "companion";
   children: React.ReactNode;
+  speakText?: string;
 }) {
   const isUser = role === "user";
   return (
@@ -138,6 +149,11 @@ function Bubble({
       >
         {children}
       </div>
+      {speakText && (
+        <div className="mt-0.5 pl-1">
+          <SpeakAloud text={speakText} />
+        </div>
+      )}
     </div>
   );
 }

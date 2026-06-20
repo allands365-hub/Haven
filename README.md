@@ -24,6 +24,7 @@ patterns that standard trackers miss, and offers conversational, contextual supp
 | --- | --- |
 | **Companion** (centerpiece) | An empathetic, always-available chat. Validates feelings, then offers one small, exam-aware next step. |
 | **Daily reflection** | Mood check-in (1–5) + open-ended journaling → an AI reflection naming emotions, stress triggers, and a soft coping suggestion. |
+| **Voice** | **Speak** your entry or message (OpenAI Whisper → text), and tap **Listen** to hear replies in a warm OpenAI voice. |
 | **Mood patterns** | A mood trend over time + the recurring stress triggers ranked by frequency — the patterns a single entry can't show. |
 | **Calm zone** | Guided 4-4-4 box breathing + 2-minute resets (grounding, shoulder release, reframing) — and the exercise that fits your detected state is **recommended automatically** from your journal. |
 | **Safety net** (always on) | Deterministic crisis detection that surfaces India helplines the moment distress is detected. |
@@ -36,6 +37,8 @@ unit-tested code does the logic — and, crucially, the safety net.**
 - **AI layer** (OpenAI `gpt-4o-mini`, called server-side from Convex):
   - the companion's conversational replies (`convex/companion.ts`)
   - journal analysis as **structured JSON** — emotions, triggers, a reflection (`convex/analyze.ts`)
+  - **voice in** — Whisper speech-to-text (`convex/transcribe.ts`)
+  - **voice out** — warm text-to-speech (`convex/speak.ts`)
 - **Deterministic engine** — pure functions in `convex/lib/`, covered by unit tests **and** HTTP integration tests:
   - `crisis.ts` — risk triage (`none` / `elevated` / `crisis`). This is the **guaranteed safety net**: it never depends on the model's judgement, normalises phone-keyboard curly apostrophes, and surfaces helplines.
   - `triggers.ts` — an exam-stress trigger taxonomy + frequency aggregation (the "patterns standard trackers miss").
@@ -78,7 +81,7 @@ plain, testable code, not left to a probabilistic model.
 
 ## Tech stack
 
-Next.js 16 · React 19 · Convex · Tailwind CSS v4 · Bun · OpenAI · TypeScript
+Next.js 16 · React 19 · Convex · Tailwind CSS v4 · Bun · OpenAI (chat · Whisper · TTS) · TypeScript
 Tests: **Bun** (unit) + **Hurl** (HTTP integration against the live deployment).
 
 ## Run locally

@@ -17,6 +17,8 @@ import type * as lib_mood from "../lib/mood.js";
 import type * as lib_openai from "../lib/openai.js";
 import type * as lib_recommend from "../lib/recommend.js";
 import type * as lib_triggers from "../lib/triggers.js";
+import type * as speak from "../speak.js";
+import type * as transcribe from "../transcribe.js";
 
 import type {
   ApiFromModules,
@@ -34,6 +36,8 @@ declare const fullApi: ApiFromModules<{
   "lib/openai": typeof lib_openai;
   "lib/recommend": typeof lib_recommend;
   "lib/triggers": typeof lib_triggers;
+  speak: typeof speak;
+  transcribe: typeof transcribe;
 }>;
 
 /**

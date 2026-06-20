@@ -5,6 +5,7 @@ import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { TRIGGERS } from "../../convex/lib/triggers";
 import { recommendExercise, type ExerciseKey } from "../../convex/lib/recommend";
+import { VoiceButton } from "./VoiceButton";
 import type { TriggerKey } from "../../lib/types";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -215,19 +216,28 @@ export function JournalCheckin({
           </div>
         </fieldset>
 
-        <label className="block space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-            What&apos;s occupying your mind?
-          </span>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <label
+              htmlFor="journal-text"
+              className="text-xs font-semibold uppercase tracking-wider text-muted"
+            >
+              What&apos;s occupying your mind?
+            </label>
+            <VoiceButton
+              onTranscript={(t) => setText((prev) => (prev.trim() ? `${prev.trim()} ${t}` : t))}
+            />
+          </div>
           <textarea
+            id="journal-text"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="There's so much Physics to revise before the weekly test. I can't shake the fear that I'll run out of time…"
+            placeholder="There's so much Physics to revise before the weekly test. I can't shake the fear that I'll run out of time… (or tap Speak)"
             rows={6}
             required
             className="w-full resize-none rounded-xl border border-line bg-base p-4 text-sm leading-relaxed text-slate placeholder:text-muted/70 focus:border-sage focus:outline-none"
           />
-        </label>
+        </div>
       </div>
 
       <button
