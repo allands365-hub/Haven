@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/*
+ * Haven — "Spacious Zen" palette.
+ * Warm alabaster canvas, a single restful sage accent, soft charcoal text.
+ * Calm and uncluttered: the design gets out of the student's way.
+ */
+@theme {
+  --color-base: #f6f5f0; /* warm soft alabaster canvas */
+  --color-surface: #ffffff; /* cards / workspace */
+  --color-sage: #7c9a82; /* the single accent */
+  --color-sage-soft: #9bb29f;
+  --color-slate: #2e332e; /* primary text */
+  --color-muted: #656c65; /* secondary text */
+  --color-water: #dfe7e2; /* cool calm tint */
+  --color-line: #e7e5dd; /* hairline borders */
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+}
+
+body {
+  background: var(--color-base);
+  color: var(--color-slate);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Visible keyboard focus — accessibility floor. */
+:focus-visible {
+  outline: 2px solid #7c9a82;
+  outline-offset: 2px;
+}
+
+/* Calming entrance, but never for users who asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up {
+    animation: fade-up 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathing-circle { transition: none !important; }
+}
