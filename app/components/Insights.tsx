@@ -68,7 +68,9 @@ export function Insights({ sessionId }: { sessionId: string }) {
                     <li key={t.trigger} className="space-y-1">
                       <div className="flex justify-between text-xs font-medium text-slate">
                         <span>{t.label}</span>
-                        <span className="text-[10px] text-muted">{t.count} logs</span>
+                        <span className="text-[10px] text-muted">
+                          {t.count} {t.count === 1 ? "log" : "logs"}
+                        </span>
                       </div>
                       <div className="h-1.5 w-full overflow-hidden rounded-full bg-line">
                         <div
