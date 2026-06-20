@@ -145,7 +145,7 @@ export function JournalCheckin({
           <p className="text-xs text-muted">Need some breathing support next?</p>
           <button
             onClick={onGoToCalm}
-            className="cursor-pointer rounded-xl bg-sage px-4 py-2 text-xs font-semibold text-white hover:opacity-90"
+            className="cursor-pointer rounded-xl bg-sage-deep px-4 py-2 text-xs font-semibold text-white hover:opacity-90"
           >
             Go to Calm
           </button>
@@ -206,7 +206,7 @@ export function JournalCheckin({
 
       <button
         type="submit"
-        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-sage py-3.5 font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
+        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-sage-deep py-3.5 font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
       >
         Reflect with Haven
       </button>

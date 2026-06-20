@@ -8,7 +8,8 @@
 @theme {
   --color-base: #f6f5f0; /* warm soft alabaster canvas */
   --color-surface: #ffffff; /* cards / workspace */
-  --color-sage: #7c9a82; /* the single accent (fills/backgrounds) */
+  --color-sage: #7c9a82; /* the single accent — tints, borders, decorative fills */
+  --color-sage-deep: #557a5d; /* fills that carry WHITE text — white→4.7:1, WCAG AA */
   --color-sage-ink: #4d6b53; /* darker sage for TEXT on light — WCAG AA */
   --color-sage-soft: #9bb29f;
   --color-slate: #2e332e; /* primary text */

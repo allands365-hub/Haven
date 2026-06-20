@@ -109,7 +109,7 @@ export function CompanionChat({
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="flex cursor-pointer items-center justify-center rounded-xl bg-sage px-5 text-sm font-semibold text-white transition-opacity hover:opacity-95 disabled:opacity-50"
+            className="flex cursor-pointer items-center justify-center rounded-xl bg-sage-deep px-5 text-sm font-semibold text-white transition-opacity hover:opacity-95 disabled:opacity-50"
           >
             Send
           </button>
@@ -132,7 +132,7 @@ function Bubble({
       <div
         className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
           isUser
-            ? "rounded-tr-none bg-sage text-white shadow-sm"
+            ? "rounded-tr-none bg-sage-deep text-white shadow-sm"
             : "rounded-tl-none border border-line bg-base text-slate"
         }`}
       >

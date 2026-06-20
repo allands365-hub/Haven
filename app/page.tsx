@@ -118,7 +118,7 @@ export default function Home() {
                       }}
                       className={`min-h-[36px] cursor-pointer rounded-lg border py-2 text-[10px] font-medium transition-all ${
                         exam === x
-                          ? "border-sage bg-sage text-white"
+                          ? "border-sage-deep bg-sage-deep text-white"
                           : "border-line text-muted hover:bg-base"
                       }`}
                     >

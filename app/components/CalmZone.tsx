@@ -53,7 +53,7 @@ export function CalmZone() {
               }`}
               style={{ width: "82%", height: "82%", transitionDuration: "4000ms" }}
             />
-            <div className="z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-sage p-3 text-center text-white shadow-md">
+            <div className="z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-sage-deep p-3 text-center text-white shadow-md">
               <span className="mb-0.5 text-[10px] font-bold uppercase tracking-widest opacity-90">
                 {running ? phaseLabel : "Steady"}
               </span>
@@ -76,7 +76,7 @@ export function CalmZone() {
           <button
             onClick={toggle}
             className={`w-full cursor-pointer rounded-lg py-2.5 text-xs font-semibold uppercase tracking-wider transition-all ${
-              running ? "bg-line text-slate" : "bg-sage text-white hover:opacity-95"
+              running ? "bg-line text-slate" : "bg-sage-deep text-white hover:opacity-95"
             }`}
           >
             {running ? "Pause" : "Begin"}
