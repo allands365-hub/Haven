@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CompanionChat } from "./components/CompanionChat";
 import { JournalCheckin } from "./components/JournalCheckin";
 import { Insights } from "./components/Insights";
@@ -30,6 +30,26 @@ export default function Home() {
   const [name, setName] = useState("friend");
   const [exam, setExam] = useState("JEE");
   const [showProfile, setShowProfile] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  // Close the profile dropdown on outside click or Escape.
+  useEffect(() => {
+    if (!showProfile) return;
+    function onPointer(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setShowProfile(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowProfile(false);
+    }
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [showProfile]);
 
   // Lightweight personalisation, persisted locally (no account needed).
   useEffect(() => {
@@ -64,7 +84,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="relative w-full md:w-auto">
+          <div ref={profileRef} className="relative w-full md:w-auto">
             <button
               onClick={() => setShowProfile((s) => !s)}
               className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-2 text-xs font-semibold text-slate shadow-sm transition-all hover:border-sage/40 md:w-auto"
