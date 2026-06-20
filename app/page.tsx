@@ -21,9 +21,17 @@ const TABS: { key: Tab; Icon: IconCmp; label: string }[] = [
 const EXAMS = ["JEE", "NEET", "UPSC", "CAT", "GATE", "CUET"];
 
 export default function Home() {
-  const [sessionId] = useState(
-    () => Math.random().toString(36).slice(2) + Date.now().toString(36),
-  );
+  // Stable session id, persisted so journaling history + patterns accumulate
+  // across visits (the "throughout their academic journey" requirement).
+  const [sessionId] = useState(() => {
+    const fresh = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+    if (typeof window === "undefined") return fresh();
+    const existing = window.localStorage.getItem("haven-session");
+    if (existing) return existing;
+    const id = fresh();
+    window.localStorage.setItem("haven-session", id);
+    return id;
+  });
   const [tab, setTab] = useState<Tab>("companion");
   const [crisis, setCrisis] = useState(false);
 
